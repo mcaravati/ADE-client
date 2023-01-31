@@ -1,8 +1,9 @@
-import {IADEClient, Room} from "./IADEClient";
-import {getTimestamp} from "./timestamp";
+import { IADEClient, Room } from "./IADEClient";
+import { getTimestamp } from "./timestamp";
 
-import axios, {AxiosResponse} from "axios";
-import {config} from "dotenv";
+import axios, { AxiosResponse } from "axios";
+import { config } from "dotenv";
+import { fromURL } from "node-ical";
 
 // Load .env file
 config();
@@ -98,7 +99,7 @@ function createClient(): IADEClient {
                 timestamp +
                 "|7|0|0|0|1|1|8|8|-1|0|0|";
 
-            await axios.post(url, payload, {headers: getHeaders()});
+            await axios.post(url, payload, { headers: getHeaders() });
         },
         /**
          * Initializes the project
@@ -111,12 +112,12 @@ function createClient(): IADEClient {
                 timestamp +
                 "|1|0|";
 
-            await axios.post(url, payload, {headers: getHeaders()});
+            await axios.post(url, payload, { headers: getHeaders() });
         },
-      /**
-       * Gets the ADE id of the user
-       * @param casUID The CAS UID of the user (ex: mcaravati)
-       */
+        /**
+         * Gets the ADE id of the user
+         * @param casUID The CAS UID of the user (ex: mcaravati)
+         */
         async getADEId(casUID: string): Promise<number> {
             const url =
                 "https://ade.bordeaux-inp.fr/direct/gwtdirectplanning/DirectPlanningServiceProxy";
@@ -140,10 +141,10 @@ function createClient(): IADEClient {
                 throw new Error("Could not find adeId in response");
             }
         },
-      /**
-       * Recursively gets all the rooms from a folder
-       * @param folderId The ADE id of the folder
-       */
+        /**
+         * Recursively gets all the rooms from a folder
+         * @param folderId The ADE id of the folder
+         */
         async getRoomsFromFolder(folderId: string): Promise<Room[]> {
             const url =
                 "https://ade.bordeaux-inp.fr/direct/gwtdirectplanning/DirectPlanningServiceProxy";
@@ -154,7 +155,7 @@ function createClient(): IADEClient {
                 timestamp +
                 "|8|7|0|9|2|-1|-1|10|0|2|6|11|12|0|13|11|14|15|11|0|0|6|16|12|0|17|16|14|15|4|0|0|18|0|18|0|19|20|1|16|18|0|";
 
-            const {data} = await axios.post(url, payload, {
+            const { data } = await axios.post(url, payload, {
                 headers: getHeaders(),
             });
             const roomRegex =
@@ -190,10 +191,10 @@ function createClient(): IADEClient {
 
             return rooms.concat(buffer);
         },
-      /**
-       * Fetches all the rooms from ADE
-       */
-      async getRooms(): Promise<Room[]> {
+        /**
+         * Fetches all the rooms from ADE
+         */
+        async getRooms(): Promise<Room[]> {
             const url =
                 "https://ade.bordeaux-inp.fr/direct/gwtdirectplanning/DirectPlanningServiceProxy";
             const payload =
@@ -201,7 +202,7 @@ function createClient(): IADEClient {
                 timestamp +
                 "|8|7|0|9|2|-1|-1|10|0|2|6|11|12|0|13|11|14|15|11|0|0|6|16|12|0|17|16|14|15|4|0|0|18|0|18|0|19|20|1|16|18|0|";
 
-            const {data} = await axios.post(url, payload, {
+            const { data } = await axios.post(url, payload, {
                 headers: getHeaders(),
             });
 
@@ -233,7 +234,15 @@ function createClient(): IADEClient {
 
             return rooms.concat(buffer);
         },
+
+        async getPlanningForRoom(room: Room, firstDate: Date, lastDate: Date): Promise<void> {
+            const firstDateStr = firstDate.toISOString().split("T")[0]
+            const lastDateStr = lastDate.toISOString().split("T")[0]
+            const payload = `https://adeapp.bordeaux-inp.fr/jsp/custom/modules/plannings/anonymous_cal.jsp?resources=${room.id}`
+                + `&projectId=1&calType=ical&firstDate=${firstDateStr}&lastDate=${lastDateStr}&displayConfigId=71`
+            room.edt = await fromURL(payload)
+        }
     };
 }
 
-export {createClient};
+export { createClient };
