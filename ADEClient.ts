@@ -159,8 +159,8 @@ function createClient(): IADEClient {
                 headers: getHeaders(),
             });
             const roomRegex =
-                /{\\"(\d+)(?:\\"){2}(true|false).*?\\"LabelName(?:\\"){2}([\w-_ ]+)/g;
-
+                /{\\"(\d+)(?:\\"){2}(true|false).*?\\"LabelName(?:\\"){2}([(\w-|/)_ ]+)/g;
+            console.log(data)
             // Execute regex on data
             let match = roomRegex.exec(data);
             const rooms: Room[] = [];
