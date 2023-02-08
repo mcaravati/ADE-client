@@ -166,9 +166,6 @@ function createClient(): IADEClient {
             // Execute regex on data
             let match = roomRegex.exec(data);
             const rooms: Room[] = [];
-            if(folderId == "5974"){
-                console.log(data)
-            }
             while (match != null) {
                 if (match[1] === folderId) {
                     match = roomRegex.exec(data);
@@ -187,7 +184,6 @@ function createClient(): IADEClient {
 
             for (const room of rooms) {
                 if (room.isFolder) {
-                    console.log(room.name, room.id)
                     const roomsFromFolder = await this.getRoomsFromFolder(room.id, depth+1);
                     buffer.push(...roomsFromFolder);
                 }
