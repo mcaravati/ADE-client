@@ -15,7 +15,7 @@ interface IADEClient {
     initProject: () => Promise<void>,
     getADEId: (_: string) => Promise<number>,
     getRooms: () => Promise<Room[]>,
-    getRoomsFromFolder: (_: string) => Promise<Room[]>,
+    getRoomsFromFolder: (_: string, depth?: number) => Promise<Room[]>,
     getPlanningForRoom: (r: Room, s: Date, e: Date) => Promise<void>
 };
 

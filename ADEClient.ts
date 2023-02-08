@@ -145,13 +145,16 @@ function createClient(): IADEClient {
          * Recursively gets all the rooms from a folder
          * @param folderId The ADE id of the folder
          */
-        async getRoomsFromFolder(folderId: string): Promise<Room[]> {
+        async getRoomsFromFolder(folderId: string, depth?: number): Promise<Room[]> {
+            depth = depth === undefined ? 1 : depth
             const url =
                 "https://ade.bordeaux-inp.fr/direct/gwtdirectplanning/DirectPlanningServiceProxy";
             const payload =
                 '7|0|20|https://ade.bordeaux-inp.fr/direct/gwtdirectplanning/|067818807965393FC5DCF6AECC2CA8EC|com.adesoft.gwt.directplan.client.rpc.DirectPlanningServiceProxy|method4getChildren|J|java.lang.String/2004016611|com.adesoft.gwt.directplan.client.ui.tree.TreeResourceConfig/2234901663|{"' +
                 folderId +
-                '""true""1""-1""5""5""0""false"[2]{"ColorField""COLOR""LabelColor""255,255,255""false""false"{"StringField""NAME""LabelName""ENSEIRB-MATMECA""false""false""ENSEIRB-MATMECA""classroom""3""0"[0][0]|[I/2970817851|java.util.LinkedHashMap/3008245022|COLOR|com.adesoft.gwt.core.client.rpc.config.OutputField/870745015|LabelColor||com.adesoft.gwt.core.client.rpc.config.FieldType/1797283245|NAME|LabelName|java.util.ArrayList/4159755760|com.extjs.gxt.ui.client.data.SortInfo/1143517771|com.extjs.gxt.ui.client.Style$SortDir/3873584144|1|2|3|4|3|5|6|7|' +
+                '""true""'+
+                depth
+                + '""-1""5""5""0""false"[2]{"ColorField""COLOR""LabelColor""255,255,255""false""false"{"StringField""NAME""LabelName""ENSEIRB-MATMECA""false""false""ENSEIRB-MATMECA""classroom""3""0"[0][0]|[I/2970817851|java.util.LinkedHashMap/3008245022|COLOR|com.adesoft.gwt.core.client.rpc.config.OutputField/870745015|LabelColor||com.adesoft.gwt.core.client.rpc.config.FieldType/1797283245|NAME|LabelName|java.util.ArrayList/4159755760|com.extjs.gxt.ui.client.data.SortInfo/1143517771|com.extjs.gxt.ui.client.Style$SortDir/3873584144|1|2|3|4|3|5|6|7|' +
                 timestamp +
                 "|8|7|0|9|2|-1|-1|10|0|2|6|11|12|0|13|11|14|15|11|0|0|6|16|12|0|17|16|14|15|4|0|0|18|0|18|0|19|20|1|16|18|0|";
 
@@ -163,13 +166,14 @@ function createClient(): IADEClient {
             // Execute regex on data
             let match = roomRegex.exec(data);
             const rooms: Room[] = [];
-
+            if(folderId == "5974"){
+                console.log(data)
+            }
             while (match != null) {
                 if (match[1] === folderId) {
                     match = roomRegex.exec(data);
                     continue;
                 }
-
                 rooms.push({
                     id: match[1],
                     name: match[3],
@@ -183,7 +187,8 @@ function createClient(): IADEClient {
 
             for (const room of rooms) {
                 if (room.isFolder) {
-                    const roomsFromFolder = await this.getRoomsFromFolder(room.id);
+                    console.log(room.name, room.id)
+                    const roomsFromFolder = await this.getRoomsFromFolder(room.id, depth+1);
                     buffer.push(...roomsFromFolder);
                 }
             }
@@ -223,8 +228,8 @@ function createClient(): IADEClient {
             }
 
             const buffer: Room[] = [];
-
             for (const room of rooms) {
+
                 if (room.isFolder) {
                     const roomsFromFolder = await this.getRoomsFromFolder(room.id);
                     buffer.push(...roomsFromFolder);
