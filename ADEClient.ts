@@ -3,7 +3,7 @@ import { getTimestamp } from "./timestamp";
 
 import axios, { AxiosResponse } from "axios";
 import { config } from "dotenv";
-import { fromURL } from "node-ical";
+import { CalendarResponse, fromURL } from "node-ical";
 
 // Load .env file
 config();
@@ -235,12 +235,12 @@ function createClient(): IADEClient {
             return rooms.concat(buffer);
         },
 
-        async getPlanningForRoom(room: Room, firstDate: Date, lastDate: Date): Promise<void> {
+        async getPlanningForResource(id: string, firstDate: Date, lastDate: Date): Promise<CalendarResponse> {
             const firstDateStr = firstDate.toISOString().split("T")[0]
             const lastDateStr = lastDate.toISOString().split("T")[0]
-            const payload = `https://adeapp.bordeaux-inp.fr/jsp/custom/modules/plannings/anonymous_cal.jsp?resources=${room.id}`
+            const payload = `https://adeapp.bordeaux-inp.fr/jsp/custom/modules/plannings/anonymous_cal.jsp?resources=${id}`
                 + `&projectId=1&calType=ical&firstDate=${firstDateStr}&lastDate=${lastDateStr}&displayConfigId=71`
-            room.edt = await fromURL(payload)
+            return await fromURL(payload)
         }
     };
 }
