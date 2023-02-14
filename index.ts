@@ -1,5 +1,6 @@
 import type {IADEClient, Room} from "./IADEClient";
 import {createClient} from "./ADEClient";
+import { writeFile } from "fs/promises";
 
 (async () => {
     const client: IADEClient = createClient();
@@ -8,11 +9,5 @@ import {createClient} from "./ADEClient";
     await client.initializeADEConnection();
     await client.sendConnectionRequest();
     await client.initProject();
-
-    const uid = 'skhalifa';
-    console.log(await client.getADEId(uid));
-    let r: Room = {id: "3272", name: "EA-I111/I113", isFolder: false, parent: null}
-    await client.getPlanningForRoom(r, new Date(), new Date())
-    console.log(r.edt)
 
 })();

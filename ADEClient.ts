@@ -1,9 +1,11 @@
-import { IADEClient, Room } from "./IADEClient";
+import type { IADEClient, Room } from "./IADEClient";
 import { getTimestamp } from "./timestamp";
 
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
+import type { AxiosResponse } from "axios";
 import { config } from "dotenv";
-import { CalendarResponse, fromURL } from "node-ical";
+import { fromURL } from "node-ical";
+import type { CalendarResponse } from "node-ical";
 
 // Load .env file
 config();

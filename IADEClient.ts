@@ -1,4 +1,4 @@
-import { CalendarResponse } from "node-ical";
+import type{ CalendarResponse } from "node-ical";
 
 
 type Room = {
@@ -18,7 +18,7 @@ interface IADEClient {
     getPlanningForResource: (id: string, s: Date, e: Date) => Promise<CalendarResponse>
 };
 
-export {
+export type {
     IADEClient,
     Room,
 };
