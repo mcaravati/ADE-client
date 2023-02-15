@@ -16,5 +16,6 @@
     "axios": "^1.2.6",
     "dotenv": "^16.0.3",
     "node-ical": "^0.15.3"
-  }
+  },
+	"type": "module"
 }
