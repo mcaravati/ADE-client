@@ -5,6 +5,7 @@
   "scripts": {
     "start": "ts-node index.ts"
   },
+  "main": "index.ts",
   "author": "",
   "license": "ISC",
   "devDependencies": {
@@ -16,6 +17,5 @@
     "axios": "^1.2.6",
     "dotenv": "^16.0.3",
     "node-ical": "^0.15.3"
-  },
-	"type": "module"
+  }
 }
