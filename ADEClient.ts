@@ -3,12 +3,8 @@ import { getTimestamp } from "./timestamp";
 
 import axios from "axios";
 import type { AxiosResponse } from "axios";
-import { config } from "dotenv";
 import { fromURL } from "node-ical";
 import type { CalendarResponse } from "node-ical";
-
-// Load .env file
-config();
 
 let cookies: string[] = [];
 let adeCookie: string;
@@ -37,7 +33,7 @@ function createClient(): IADEClient {
         /**
          * Fetch ADE cookies and log in to the CAS
          */
-        async initializeADEConnection(): Promise<void> {
+        async initializeADEConnection(login: string, password: string): Promise<void> {
             const getCookiesFromResponse = (response: AxiosResponse) => {
                 return response.request.res.headers["set-cookie"][0].split(";")[0];
             };
@@ -56,8 +52,8 @@ function createClient(): IADEClient {
             );
 
             const connectionPayload = {
-                username: process.env.CAS_USERNAME,
-                password: process.env.CAS_PASSWORD,
+                username: login,
+                password: password,
                 lt: "",
                 execution: "",
                 _eventId: "submit",

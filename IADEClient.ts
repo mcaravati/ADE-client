@@ -9,7 +9,7 @@ type Room = {
 };
 
 interface IADEClient {
-    initializeADEConnection: () => Promise<void>,
+    initializeADEConnection: (casLogin: string, casPassword: string) => Promise<void>,
     sendConnectionRequest: () => Promise<void>,
     initProject: () => Promise<void>,
     getADEId: (_: string) => Promise<number>,
