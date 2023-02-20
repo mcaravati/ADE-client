@@ -1,4 +1,4 @@
-let BUFFER: string = '';
+let BUFFER = "";
 
 function base64Append(digit: number, haveNonZero: boolean): boolean {
     let encoded: number;
@@ -13,23 +13,23 @@ function base64Append(digit: number, haveNonZero: boolean): boolean {
         } else if (digit < 52) {
             encoded = 97 + digit - 26;
         } else if (digit < 62) {
-            encoded = 48 + digit - 52
+            encoded = 48 + digit - 52;
         } else if (digit == 62) {
-            encoded = 36
+            encoded = 36;
         } else {
-            encoded = 95
+            encoded = 95;
         }
 
         // Append to result
-        BUFFER += String.fromCharCode(encoded & 65535)
+        BUFFER += String.fromCharCode(encoded & 65535);
     }
 
-    return haveNonZero
+    return haveNonZero;
 }
 
 /**
  * Thanks Google, I guess ?
- * @param longValue The long value to convert to base64
+ * @param {number} longValue The long value to convert to base64
  */
 function longToBase64(longValue: number): string {
     const low = longValue & 0xffffffff;
